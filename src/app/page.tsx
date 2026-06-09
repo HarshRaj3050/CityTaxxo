@@ -2,7 +2,9 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div className='bg-black w-dvw min-h-screen text-white'>
+      page
+    </div>
   )
 }
 
