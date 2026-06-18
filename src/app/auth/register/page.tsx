@@ -15,6 +15,7 @@ const Page = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const [otp, setOtp] = useState(["", "", "", ""]);
 
   const data = useSession();
 
@@ -22,33 +23,124 @@ const Page = () => {
     setLoading(true);
     setErr("");
     try {
-      const { data } = await axios.post("/api/auth/register", { name, email, password })
+      const { data } = await axios.post("/api/auth/register", {
+        name,
+        email,
+        password,
+      });
       console.log(data);
+      setStep("otp");
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
       setErr(error.response.data.message ?? "Something went wrong");
     }
-  }
+  };
+
+  const handleVerifyEmail = async () => {
+    setLoading(true);
+    setErr("");
+
+    try {
+      const enteredOtp = otp.join("");
+
+      if (!email) {
+        setErr("Email is required");
+        return;
+      }
+
+      if (enteredOtp.length !== 4) {
+        setErr("Please enter a valid 4-digit OTP");
+        return;
+      }
+
+      console.log("Sending:", {
+        email,
+        otp: enteredOtp,
+      });
+
+      const { data } = await axios.post("/api/auth/verify-email", {
+        email,
+        otp: enteredOtp,
+      });
+
+      console.log("Success:", data);
+
+      setStep("login");
+    } catch (error) {
+      console.error(error);
+
+      if (axios.isAxiosError(error)) {
+        console.log("Response:", error.response?.data);
+
+        setErr(
+          error.response?.data?.message ||
+            error.response?.data?.messsage || // handles your previous typo
+            error.message ||
+            "Something went wrong",
+        );
+      } else {
+        setErr("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogin = async () => {
     setLoading(true);
     const res = await signIn("credentials", {
-      email, password, redirect: false
-    })
+      email,
+      password,
+      redirect: false,
+    });
     console.log(data);
     setLoading(false);
     console.log(res);
-  }
+  };
 
   const handleGoogleLogin = async () => {
-    await signIn('google')
-  }
+    await signIn("google");
+  };
+
+  const handleChangeOtp = (index: number, value: string) => {
+    if (!/^[0-9]?$/.test(value)) return;
+
+    const updated = [...otp];
+    updated[index] = value;
+    setOtp(updated);
+
+    if (value && index < otp.length - 1) {
+      document.getElementById(`otp-${index + 1}`)?.focus();
+    }
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    if (e.key === "Backspace") {
+      const updated = [...otp];
+
+      if (otp[index]) {
+        // Clear current digit
+        updated[index] = "";
+        setOtp(updated);
+      } else if (index > 0) {
+        // Move to previous input and clear it
+        updated[index - 1] = "";
+        setOtp(updated);
+        document.getElementById(`otp-${index - 1}`)?.focus();
+      }
+    }
+  };
 
   return (
     <div className="w-dvw h-screen p-10 ">
-      <button className="w-full h-11 rounded-xl border border-black/20 flex items-center justify-center text-sm gap-3 font-semibold hover:bg-black hover:text-white transition-colors duration-300"
-              onClick={handleGoogleLogin}>
+      <button
+        className="w-full h-11 rounded-xl border border-black/20 flex items-center justify-center text-sm gap-3 font-semibold hover:bg-black hover:text-white transition-colors duration-300"
+        onClick={handleGoogleLogin}
+      >
         <Image src="/google-logo.png" alt="Google" width={20} height={20} />
         Continue with Google
       </button>
@@ -88,9 +180,30 @@ const Page = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <button className="w-full h-11 bg-black text-white font-semibold rounded-xl hover:bg-gray-900 transition flex justify-center items-center" onClick={handleLogin}>{loading ? <CircleDashed size={18} color="white" className="animate-spin" /> : "Login"}</button>
+              <button
+                className="w-full h-11 bg-black text-white font-semibold rounded-xl hover:bg-gray-900 transition flex justify-center items-center"
+                onClick={handleLogin}
+              >
+                {loading ? (
+                  <CircleDashed
+                    size={18}
+                    color="white"
+                    className="animate-spin"
+                  />
+                ) : (
+                  "Login"
+                )}
+              </button>
             </div>
-            <p className="mt-6 text-center text-sm text-gray-500 ">Don&apos;t have a account? <span onClick={() => setStep('signup')} className="text-black font-medium hover:underline">SignUp</span></p>
+            <p className="mt-6 text-center text-sm text-gray-500 ">
+              Don&apos;t have a account?{" "}
+              <span
+                onClick={() => setStep("signup")}
+                className="text-black font-medium hover:underline"
+              >
+                SignUp
+              </span>
+            </p>
           </motion.div>
         )}
         {step == "signup" && (
@@ -134,11 +247,66 @@ const Page = () => {
 
               {err && <p className="text-red-500">*{err}</p>}
 
-              <button className="w-full h-11 bg-black text-white font-semibold rounded-xl hover:bg-gray-900 transition flex justify-center items-center"
+              <button
+                className="w-full h-11 bg-black text-white font-semibold rounded-xl hover:bg-gray-900 transition flex justify-center items-center"
                 onClick={handleSignUp}
-              >{loading ? <CircleDashed size={18} color="white" className="animate-spin" /> : "Sign Up"}</button>
+              >
+                {loading ? (
+                  <CircleDashed
+                    size={18}
+                    color="white"
+                    className="animate-spin"
+                  />
+                ) : (
+                  "Send Otp"
+                )}
+              </button>
             </div>
-            <p className="mt-6 text-center text-sm text-gray-500 ">Already have an account? <span onClick={() => setStep('login')} className="text-black font-medium hover:underline">Login</span></p>
+            <p className="mt-6 text-center text-sm text-gray-500 ">
+              Already have an account?{" "}
+              <span
+                onClick={() => setStep("login")}
+                className="text-black font-medium hover:underline"
+              >
+                Login
+              </span>
+            </p>
+          </motion.div>
+        )}
+        {step == "otp" && (
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <h1 className="text-xl font-semibold">OTP Verification</h1>
+
+            <div className="mt-10 mx-10 flex justify-between gap-2 ">
+              {otp.map((digit, i) => (
+                <input
+                  key={i}
+                  id={`otp-${i}`}
+                  value={digit}
+                  maxLength={1}
+                  className="w-10 h-12 text-center text-xl font-semibold rounded-xl bg-white text-black border border-black/20 outline-none"
+                  onChange={(e) => handleChangeOtp(i, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, i)}
+                />
+              ))}
+            </div>
+            <button
+              className="w-full h-11 mt-8 bg-black text-white font-semibold rounded-xl hover:bg-gray-900 transition flex justify-center items-center"
+              onClick={handleVerifyEmail}
+            >
+              {loading ? (
+                <CircleDashed
+                  size={18}
+                  color="white"
+                  className="animate-spin"
+                />
+              ) : (
+                "Verify & Create Account"
+              )}
+            </button>
           </motion.div>
         )}
       </div>
