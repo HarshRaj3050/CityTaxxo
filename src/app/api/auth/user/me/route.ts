@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import connectDB from "@/lib/db";
 import User from "@/models/user.model";
-import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {

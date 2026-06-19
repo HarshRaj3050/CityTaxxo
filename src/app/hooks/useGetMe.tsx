@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
-import { router } from 'next/client';
 
 const useGetMe = (enabled: boolean) => {
 

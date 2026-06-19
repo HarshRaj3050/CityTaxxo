@@ -6,7 +6,7 @@ import React from 'react'
 const page = () => {
   return (
     <div className='bg-black w-dvw h-dvh text-white flex justify-center'>
-      <div className='w-full md:max-w-1/2 h-full bg-white text-black'>
+      <div className='w-full md:max-w-1/2 h-full bg-white text-black pb-4'>
         <div className='w-full h-[70%]'>
           
         </div>
