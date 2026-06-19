@@ -48,69 +48,106 @@ export async function POST(req: NextRequest) {
       "Your OTP for Email Verification",
       `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTP Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Your Email - CityTaxxo</title>
 </head>
-<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:40px 0;">
+
+<body style="margin:0;padding:0;background-color:#f5f7fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f7fb;padding:40px 20px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
 
+        <table width="620" cellpadding="0" cellspacing="0" style="max-width:620px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+
+          <!-- Header -->
           <tr>
-            <td style="padding:30px;text-align:center;background:#111827;">
-              <h1 style="margin:0;color:#ffffff;font-size:24px;">
-                Verify Your Email
+            <td align="center" style="padding:40px 30px;background:#0f172a;">
+              <h1 style="margin:0;color:#ffffff;font-size:30px;font-weight:700;">
+                CityTaxxo
               </h1>
+              <p style="margin:10px 0 0;color:#cbd5e1;font-size:14px;">
+                Secure Account Verification
+              </p>
             </td>
           </tr>
 
+          <!-- Content -->
           <tr>
-            <td style="padding:40px 30px;">
-              <p style="margin:0 0 16px;color:#333;font-size:16px;">
-                Hello,
+            <td style="padding:48px 40px;">
+
+              <h2 style="margin:0 0 16px;color:#111827;font-size:24px;font-weight:600;">
+                Verify your email address
+              </h2>
+
+              <p style="margin:0 0 20px;color:#4b5563;font-size:16px;line-height:1.7;">
+                Thank you for choosing <strong>CityTaxxo</strong>.
+                To complete your account setup and secure your account,
+                please use the verification code below.
               </p>
 
-              <p style="margin:0 0 24px;color:#555;font-size:15px;line-height:1.6;">
-                Use the following One-Time Password (OTP) to verify your account.
-                This code is valid for the next 10 minutes.
+              <!-- OTP Box -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding:25px 0;">
+                    <div style="
+                      display:inline-block;
+                      background:#f8fafc;
+                      border:1px solid #e5e7eb;
+                      border-radius:12px;
+                      padding:18px 32px;
+                      font-size:34px;
+                      font-weight:700;
+                      letter-spacing:10px;
+                      color:#0f172a;
+                    ">
+                      ${otp}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:20px 0 0;color:#4b5563;font-size:15px;line-height:1.7;">
+                This verification code will expire in
+                <strong>5 minutes</strong>.
               </p>
 
-              <div style="text-align:center;margin:30px 0;">
-                <span
-                  style="
-                    display:inline-block;
-                    padding:14px 28px;
-                    font-size:32px;
-                    font-weight:bold;
-                    letter-spacing:8px;
-                    color:#111827;
-                    background:#f3f4f6;
-                    border-radius:8px;
-                  "
-                >
-                  ${otp}
-                </span>
-              </div>
+              <p style="margin:20px 0 0;color:#4b5563;font-size:15px;line-height:1.7;">
+                For your security, never share this code with anyone.
+                CityTaxxo employees will never ask for your verification code.
+              </p>
 
-              <p style="margin:24px 0 0;color:#555;font-size:14px;line-height:1.6;">
+            </td>
+          </tr>
+
+          <!-- Security Notice -->
+          <tr>
+            <td style="padding:24px 40px;background:#f8fafc;border-top:1px solid #e5e7eb;">
+              <p style="margin:0;color:#64748b;font-size:14px;line-height:1.6;">
                 If you did not request this verification code, you can safely ignore this email.
+                No changes will be made to your account without successful verification.
               </p>
             </td>
           </tr>
 
+          <!-- Footer -->
           <tr>
-            <td style="padding:20px;text-align:center;background:#f9fafb;color:#888;font-size:12px;">
+            <td align="center" style="padding:30px;color:#94a3b8;font-size:13px;">
               © ${new Date().getFullYear()} CityTaxxo. All rights reserved.
+              <br />
+              This is an automated message. Please do not reply to this email.
             </td>
           </tr>
 
         </table>
+
       </td>
     </tr>
   </table>
+
 </body>
 </html>
 `,

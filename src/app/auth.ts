@@ -4,9 +4,11 @@ import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+import { routeKindToIncrementalCacheKind } from "next/dist/server/response-cache/utils";
 
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+
   providers: [
     Credentials({
       credentials: {
@@ -31,11 +33,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw Error("incorrect Password");
         }
 
+        if (!user.isEmailVerified) {
+          throw Error("please verify your email first");
+        }
+
         return {
           id: user._id.toString(),
           name: user.name,
           email: user.email,
           role: user.role,
+          isEmailVerified: user.isEmailVerified,
         };
       },
     }),
@@ -53,12 +60,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if(!dbUser){
           dbUser = await User.create({
             name: user.name,
-            email: user.email
+            email: user.email,
+            isEmailVerified: true
           })
         }
 
         user.id = dbUser._id.toString();
-        user.role = dbUser.role
+        user.role = dbUser.role;
+        (user as any).isEmailVerified = dbUser.isEmailVerified;
+        
       }
       return true
     },
@@ -69,6 +79,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.email = user.email;
         token.role = user.role;
+        token.isEmailVerified = (user as any).isEmailVerified;
       }
 
       return token;
@@ -79,6 +90,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.name = token.name;
         session.user.id = token.id;
         session.user.email = token.email;
+        (session.user as any).isEmailVerified = token.isEmailVerified;
         session.user.role = token.role;
       }
       return session

@@ -4,11 +4,13 @@ import { CircleDashed, Lock, Mail, User } from "lucide-react";
 import { motion } from "motion/react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type stepType = "login" | "signup" | "otp";
 
 const Page = () => {
+  const router = useRouter();
   const [step, setStep] = useState<stepType>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -31,9 +33,16 @@ const Page = () => {
       console.log(data);
       setStep("otp");
       setLoading(false);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setLoading(false);
-      setErr(error.response.data.message ?? "Something went wrong");
+
+      if (axios.isAxiosError(error)) {
+        setErr(error.response?.data?.message ?? "Something went wrong");
+      } else if (error instanceof Error) {
+        setErr(error.message || "Something went wrong");
+      } else {
+        setErr("Something went wrong");
+      }
     }
   };
 
@@ -89,18 +98,25 @@ const Page = () => {
 
   const handleLogin = async () => {
     setLoading(true);
+    setErr("");
     const res = await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
-    console.log(data);
     setLoading(false);
-    console.log(res);
+
+    if (res?.ok) {
+      router.push("/user");
+    } else {
+      setErr(res?.error || "Login failed");
+    }
   };
 
   const handleGoogleLogin = async () => {
-    await signIn("google");
+    await signIn("google", {
+      callbackUrl: "/user",
+    });
   };
 
   const handleChangeOtp = (index: number, value: string) => {
