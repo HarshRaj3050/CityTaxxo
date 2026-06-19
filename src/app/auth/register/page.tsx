@@ -152,7 +152,7 @@ const Page = () => {
   };
 
   return (
-    <div className="w-dvw h-screen p-10 ">
+    <div className="w-dvw h-dvh p-10 ">
       <button
         className="w-full h-11 rounded-xl border border-black/20 flex items-center justify-center text-sm gap-3 font-semibold hover:bg-black hover:text-white transition-colors duration-300"
         onClick={handleGoogleLogin}
