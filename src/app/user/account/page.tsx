@@ -51,6 +51,8 @@ const menuItems = [
 
 export default function AccountPage() {
     const user = useSelector((state: RootState) => state.user);
+
+
   return (
     <div className="min-h-auto bg-white text-gray-900 pb-10">
 
