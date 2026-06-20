@@ -8,8 +8,14 @@ const config = {
   providers: [
     Credentials({
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: {
+          label: "Email",
+          type: "email",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+        },
       },
 
       async authorize(credentials: any) {
@@ -19,19 +25,26 @@ const config = {
 
         await connectDB();
 
-        const user = await User.findOne({ email: credentials.email });
+        const user = await User.findOne({
+          email: credentials.email,
+        });
 
-        if (!user) throw new Error("User does not exist");
+        if (!user) {
+          throw new Error("User does not exist");
+        }
 
         const isMatch = await bcrypt.compare(
           credentials.password,
           user.password
         );
 
-        if (!isMatch) throw new Error("Incorrect password");
+        if (!isMatch) {
+          throw new Error("Incorrect password");
+        }
 
-        if (!user.isEmailVerified)
+        if (!user.isEmailVerified) {
           throw new Error("Please verify your email first");
+        }
 
         return {
           id: user._id.toString(),
@@ -45,29 +58,6 @@ const config = {
   ],
 
   callbacks: {
-    async signIn({ user, account }: any) {
-      if (account?.provider === "google") {
-        await connectDB();
-
-        let dbUser = await User.findOne({ email: user.email });
-
-        if (!dbUser) {
-          dbUser = await User.create({
-            name: user.name,
-            email: user.email,
-            isEmailVerified: true,
-            role: "user",
-          });
-        }
-
-        user.id = dbUser._id.toString();
-        user.role = dbUser.role;
-        user.isEmailVerified = dbUser.isEmailVerified;
-      }
-
-      return true;
-    },
-
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
@@ -76,6 +66,7 @@ const config = {
         token.name = user.name;
         token.email = user.email;
       }
+
       return token;
     },
 
@@ -87,6 +78,7 @@ const config = {
         session.user.name = token.name;
         session.user.email = token.email;
       }
+
       return session;
     },
   },
@@ -104,8 +96,13 @@ const config = {
   secret: process.env.AUTH_SECRET,
 };
 
-// Initialize NextAuth
-const nextAuthConfig = NextAuth(config);
+// For next-auth v5 beta.31
+// @ts-ignore
+const nextAuth = NextAuth(config);
 
-// @ts-ignore - NextAuth middleware type definitions  
-export const { handlers, signIn, signOut, auth } = nextAuthConfig;
+export const {
+  handlers,
+  signIn,
+  signOut,
+  auth,
+} = nextAuth;

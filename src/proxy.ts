@@ -1,18 +1,16 @@
-import { NextResponse } from "next/server";
-import { auth } from './auth'
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "./auth";
 
-const proxy = auth((req) => {
+const proxy = auth((req: NextRequest & { auth: any }) => {
   const pathname = req.nextUrl.pathname;
   const session = req.auth;
 
-  // Not logged in
-  if (!session) {
+  if (!session?.user) {
     return NextResponse.redirect(
       new URL("/auth/register", req.url)
     );
   }
 
-  // Email not verified
   if (!session.user.isEmailVerified) {
     return NextResponse.redirect(
       new URL("/auth/register", req.url)
@@ -21,23 +19,17 @@ const proxy = auth((req) => {
 
   const role = session.user.role;
 
-  // Admin routes
-  if (pathname.startsWith("/admin")) {
-    if (role !== "admin") {
-      return NextResponse.redirect(
-        new URL("/auth/register", req.url)
-      );
-    }
+  if (pathname.startsWith("/admin") && role !== "admin") {
+    return NextResponse.redirect(
+      new URL("/auth/register", req.url)
+    );
   }
 
-  // Partner routes
   if (pathname.startsWith("/partner")) {
-
-    if(pathname.startsWith("/partner/onboarding") && (role == 'user')){
+    if(pathname.startsWith("/partner/onboarding") && (role == "user")){
       return NextResponse.next();
     }
-
-    if (role !== "partner") {
+    if(role !== "partner"){
       return NextResponse.redirect(
         new URL("/auth/register", req.url)
       );
