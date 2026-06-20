@@ -3,7 +3,6 @@ import User from "@/models/user.model";
 import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
 
 const config = {
   providers: [
@@ -43,8 +42,6 @@ const config = {
         };
       },
     }),
-
-    Google,
   ],
 
   callbacks: {
@@ -107,5 +104,8 @@ const config = {
   secret: process.env.AUTH_SECRET,
 };
 
-// @ts-ignore — beta.31 type definitions broken for default export
-export const { handlers, signIn, signOut, auth } = NextAuth(config);
+// Initialize NextAuth
+const nextAuthConfig = NextAuth(config);
+
+// @ts-ignore - NextAuth middleware type definitions  
+export const { handlers, signIn, signOut, auth } = nextAuthConfig;

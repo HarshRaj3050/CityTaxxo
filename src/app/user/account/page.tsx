@@ -45,7 +45,7 @@ const promoCards = [
 const menuItems = [
   { label: "Family",            subtitle: "Manage adult and senior accounts", icon: Users,     href: "/user/account"  },
   { label: "Settings",                                                        icon: Settings,  href: "/user/settings" },
-  { label: "Become a Partner",                                                 icon: Briefcase, href: "/user/partner"  },
+  { label: "Become a Partner",                                                 icon: Briefcase, href: "/partner/onboarding/vehicle"  },
   { label: "Legal",                                                            icon: Info,      href: "/user/account"  },
 ];
 

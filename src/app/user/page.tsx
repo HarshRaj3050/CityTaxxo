@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { MapPin, Search, Mic, ChevronDown, Car } from "lucide-react";
+import { motion } from "motion/react";
 import Image from "next/image";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -86,7 +87,11 @@ export default function HomePage() {
         </div>
 
         {/* Hero Text + Car */}
-        <div className="mt-1 flex items-start justify-center">
+        <motion.div 
+          initial={{y:20}}
+          animate={{y:0}}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="mt-1 flex items-start justify-center">
           <div className="mt-8 ">
             <p className="text-white text-2xl  leading-tight">Nearby 3 min</p>
             <p className="text-white text-2xl leading-tight">From <span className="font-bold">₹199</span></p>
@@ -94,12 +99,15 @@ export default function HomePage() {
           <div className="text-6xl mb-1">
             <Image src="/userHomePageCar.png" alt="image" width={200} height={200} priority></Image>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* ── Scrollable Sheet ── */}
-      <div
-        className="absolute inset-x-0 bottom-0 z-20 overflow-y-auto rounded-t-3xl bg-white shadow-2xl"
+      <motion.div
+        initial={{y: -80}}
+        animate={{y:0}}
+        transition={{duration: 0.3}}
+        className="absolute inset-x-0 bottom-0 z-20 overflow-y-auto rounded-t-3xl bg-white "
         style={{ top: "220px" }}
       >
         <div className="px-4 pt-4 pb-28">
@@ -172,7 +180,7 @@ export default function HomePage() {
           </div>
 
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

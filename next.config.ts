@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   experimental: {
-    // make sure this is NOT blocking path resolution
+    // Disable Turbopack for middleware if needed
+  },
+  typescript: {
+    ignoreBuildErrors: false,
   },
 };
 
