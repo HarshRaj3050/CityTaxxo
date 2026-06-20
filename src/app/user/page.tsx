@@ -1,5 +1,6 @@
 "use client";
 
+import { auth } from "@/auth";
 import { MapPin, Search, Mic, ChevronDown, Car } from "lucide-react";
 import Image from "next/image";
 
@@ -88,10 +89,10 @@ export default function HomePage() {
         <div className="mt-1 flex items-start justify-center">
           <div className="mt-8 ">
             <p className="text-white text-2xl  leading-tight">Nearby 3 min</p>
-            <p className="text-white text-2xl leading-tight">From <span className="font-black font-bold">₹199</span></p>
+            <p className="text-white text-2xl leading-tight">From <span className="font-bold">₹199</span></p>
           </div>
           <div className="text-6xl mb-1">
-            <Image src="/userHomePageCar.png" alt="image" width={200} height={200}></Image>
+            <Image src="/userHomePageCar.png" alt="image" width={200} height={200} priority></Image>
           </div>
         </div>
       </div>
@@ -110,40 +111,40 @@ export default function HomePage() {
           <div className="grid grid-cols-2 gap-3">
 
             {/* Sedan — large card */}
-            <div className="bg-blue-50 rounded-2xl p-4 flex flex-col justify-between min-h-[130px]">
+            <div className="bg-blue-50 relative rounded-2xl p-4 flex flex-col justify-between min-h-32.5">
               <div>
                 <p className="font-bold text-[15px] text-gray-900">Sedan</p>
                 <p className="text-gray-500 text-[12px]">From ₹199</p>
               </div>
-              <div className="text-5xl text-right">🚗</div>
+              <div className="text-5xl text-right absolute bottom-0 right-2"><Image src="/userHomePageSedan.png" alt="Sedan" width={120} height={120}></Image></div>
             </div>
 
             {/* Auto — large card */}
-            <div className="bg-blue-50 rounded-2xl p-4 flex flex-col justify-between min-h-[130px]">
+            <div className="bg-blue-50 relative rounded-2xl p-4 flex flex-col justify-between min-h-[130px]">
               <div>
                 <p className="font-bold text-[15px] text-gray-900">Auto</p>
                 <p className="text-gray-500 text-[12px]">Nearby 3 min</p>
               </div>
-              <div className="text-5xl text-right">🛺</div>
+              <div className="text-5xl text-right absolute bottom-2 right-1"><Image src="/userHomePageAuto.png" alt="Auto" width={100} height={100}></Image></div>
             </div>
 
             {/* Outstation — large card */}
-            <div className="bg-blue-50 rounded-2xl p-4 flex flex-col justify-between min-h-[130px]">
+            <div className="bg-blue-50 relative rounded-2xl p-4 flex flex-col justify-between min-h-[130px]">
               <div>
                 <p className="font-bold text-[15px] text-gray-900">Outstation</p>
               </div>
-              <div className="text-5xl text-right">🚙</div>
+              <div className="text-5xl text-right absolute top-2 right-1"><Image src="/userHomePageBag.png" alt="Car with Bag" width={130} height={130}></Image></div>
             </div>
 
             {/* Intercity + Rental stacked */}
             <div className="flex flex-col gap-3">
-              <div className="bg-blue-50 rounded-2xl p-4 flex items-center justify-between flex-1">
+              <div className="bg-blue-50 relative rounded-2xl p-4 flex items-center justify-between flex-1">
                 <p className="font-bold text-[15px] text-gray-900">Intercity</p>
-                <span className="text-3xl">🚐</span>
+                <span className="text-5xl text-right absolute bottom-2 right-2"><Image src="/userHomePageLocation.png" alt="LocationCar" width={70} height={70}></Image></span>
               </div>
-              <div className="bg-blue-50 rounded-2xl p-4 flex items-center justify-between flex-1">
+              <div className="bg-blue-50 relative rounded-2xl p-4 flex items-center justify-between flex-1">
                 <p className="font-bold text-[15px] text-gray-900">Rental</p>
-                <span className="text-3xl">⏱️</span>
+                <span className="text-5xl text-right absolute bottom-2 right-2"><Image src="/userHomePageClock.png" alt="ClockCar" width={70} height={70}></Image></span>
               </div>
             </div>
 
