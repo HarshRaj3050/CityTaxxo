@@ -70,7 +70,7 @@ const page = () => {
             <input 
               type="text" 
               id="vn" 
-              onChange={(e)=>setVehicleNumber(e.target.value)}
+              onChange={(e)=>setVehicleNumber(e.target.value.toUpperCase())}
               value={vehicleNumber}
               placeholder="BR12AB1234" 
               className="mt-2 w-full border-b border-gray-300 pb-2 text-sm focus:outline-none focus:border-black transition"/>

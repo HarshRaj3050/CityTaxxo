@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { number } from "motion";
 
 type vehicleType = "car" | "auto"
 
@@ -12,6 +13,7 @@ interface Ivehicle {
     pricePerKM?: number,
     waitingCharge?: number,
     status: "approved" | "pending" | "rejected",
+    partnerOnboardingSteps: number,
     rejectionReason?: string,
     isActive: boolean,
     createdAt: Date,
@@ -46,6 +48,12 @@ const vehicleSchema = new mongoose.Schema<Ivehicle>({
         type: String,
         enum:["approved", "rejected", "pending"],
         default: "approved"
+    },
+    partnerOnboardingSteps: {
+        type: Number,
+        min: 0,
+        max: 8,
+        default: 0
     },
     rejectionReason: String,
     isActive: {
