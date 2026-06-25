@@ -16,6 +16,7 @@ const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [err, setErr] = useState("");
   const [otp, setOtp] = useState(["", "", "", ""]);
 
@@ -114,9 +115,11 @@ const Page = () => {
   };
 
   const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
     await signIn("google", {
       callbackUrl: "/user",
     });
+    setGoogleLoading(false);
   };
 
   const handleChangeOtp = (index: number, value: string) => {
@@ -157,8 +160,24 @@ const Page = () => {
         className="w-full h-11 rounded-xl border border-black/20 flex items-center justify-center text-sm gap-3 font-semibold hover:bg-black hover:text-white transition-colors duration-300"
         onClick={handleGoogleLogin}
       >
-        <Image src="/google-logo.png" alt="Google" width={20} height={20} />
-        Continue with Google
+        
+        {googleLoading ? (
+                <>
+                  
+                  <CircleDashed
+                    size={18}
+                    color="black"
+                    className="animate-spin"
+                  />
+                  
+                </>
+                ) : (
+                  <>
+                  <Image src="/google-logo.png" alt="Google" width={20} height={20} />
+                  <p>Continue with Google</p>
+                  </>
+                )}
+        
       </button>
 
       <div className="flex items-center gap-4 my-6">

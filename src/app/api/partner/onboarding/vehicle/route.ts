@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import connectDB from "@/lib/db";
 import User from "@/models/user.model";
 import Vehicle from "@/models/vehicle.model";
+import { NextRequest } from "next/server";
 
 const VEHICLE_REGEX = /^[A-Z]{2}[0-9]{1,2}[A-Z]{0,2}[0-9]{4}$/;
 
@@ -86,5 +87,44 @@ export async function POST(req: Request){
                 {message: `vehicle error ${error}`},
                 {status: 500}
             )
+    }
+}
+
+
+export async function GET(req: NextRequest){
+    try{
+        connectDB();
+        const session = await auth()
+        if(!session || !session.user.email){
+            return Response.json(
+                {message: "unauthorized"},
+                {status: 400}
+            )
+        }
+
+        const user = await User.findOne({email: session.user.email})
+
+        if(!user){
+            return Response.json(
+                {message: "user not found"},
+                {status: 400}
+            )
+        }
+
+        const vehicle = await Vehicle.findOne({owner: session.user._id})
+        if(vehicle){
+            return Response.json(
+                vehicle,
+                {status: 201}
+            )
+        } else {
+            return null
+        }
+        
+    }catch(error){
+        return Response.json(
+                {message: `GET vehicle error ${error}`},
+                {status: 500}
+        )
     }
 }
