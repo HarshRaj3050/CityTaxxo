@@ -118,7 +118,7 @@ export async function GET(req: NextRequest){
                 {status: 201}
             )
         } else {
-            return null
+            return new Response(null, { status: 204 });
         }
         
     }catch(error){

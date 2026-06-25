@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest){
     try{
-        connectDB();
+        await connectDB();
         const session = await auth()
         if(!session || !session.user.email){
             return Response.json(
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest){
 
 export async function GET(req: NextRequest){
     try{
-        connectDB();
+        await connectDB();
         const session = await auth()
         if(!session || !session.user.email){
             return Response.json(
@@ -88,7 +88,7 @@ export async function GET(req: NextRequest){
                 {status: 200}
             )
         } else {
-            return null
+            return new Response(null, { status: 204 });
         }
 
     }catch(error){
